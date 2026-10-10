@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mobile_manipulator">
+
+  <!-- include sub-modules -->
+  <xacro:include filename="mobile_base.xacro"/>
+  <xacro:include filename="arm.xacro"/>
+  <xacro:include filename="gripper.xacro"/>
+  <xacro:include filename="ros2_control.xacro"/>
+
+</robot>

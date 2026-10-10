@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="gazebo_system" default="classic"/>
+  <xacro:arg name="controllers_yaml" default="config/controllers.yaml"/>
+
+  <!-- ros2_control tag -->
+  <ros2_control name="MobileManipulatorHardware" type="system">
+    <hardware>
+      <xacro:if value="${'$(arg gazebo_system)' == 'ignition'}">
+        <plugin>ign_ros2_control/IgnitionSystem</plugin>
+      </xacro:if>
+      <xacro:unless value="${'$(arg gazebo_system)' == 'ignition'}">
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      </xacro:unless>
+    </hardware>
+
+    <!-- mobile base wheel interfaces -->
+    <joint name="left_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="right_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- arm joint interfaces -->
+    <joint name="arm_joint1">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_joint2">
+      <command_interface name="position">
+        <param name="min">-1.57</param>
+        <param name="max">1.57</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_joint3">
+      <command_interface name="position">
+        <param name="min">-2.0</param>
+        <param name="max">2.0</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_joint4">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- gripper finger interface -->
+    <joint name="left_finger_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">0.03</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <!-- gazebo ros2_control plugin -->
+  <xacro:if value="${'$(arg gazebo_system)' == 'ignition'}">
+    <gazebo>
+      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(arg controllers_yaml)</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+  <xacro:unless value="${'$(arg gazebo_system)' == 'ignition'}">
+    <gazebo>
+      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+        <parameters>$(arg controllers_yaml)</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:unless>
+
+</robot>
